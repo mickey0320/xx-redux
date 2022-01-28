@@ -1,17 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { bindActionCreators } from "./redux";
+import { Provider, useDispatch, useSelector } from "./react-redux";
+
+import store from "./store";
+import * as module1Actions from "./store/module1Actions";
+import * as module2Actions from "./store/module2Actions";
+
+function Counter1() {
+  console.log("count1");
+  const count = useSelector((state) => state.module1.count);
+  const dispatch = useDispatch();
+
+  return (
+    <div onClick={() => dispatch(module1Actions.asyncAdd(1))}>{count}</div>
+  );
+}
+// const Counter = React.memo(Counter1);
+
+function Counter2() {
+  console.log("count2");
+  const count = useSelector((state) => state.module2.count);
+  const dispatch = useDispatch();
+
+  return <div onClick={() => dispatch(module2Actions.add(1))}>{count}</div>;
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <Provider store={store}>
+    <div>
+      <Counter1 />
+      <Counter2 />
+    </div>
+  </Provider>,
+  document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
